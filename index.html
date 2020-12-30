@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Websocket implementation</title>
+    <style>
+      form {
+        position: fixed;
+        bottom: 0;
+        padding: 10px;
+        width: 100%;
+      }
+      
+      #message {
+        height: 50px;
+        width: 350px;
+      }
+
+      #submit {
+        width: 100px;
+        height: 55px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="messages"></div>
+    <form id="form">
+      <input type="text" id="message" />
+      <input type="submit" id="submit">
+    </form>
+  </body>
+</html>
+
+<script type="text/javascript">
+  window.onload = function () {
+    var conn
+    var message = document.getElementById("message")
+    var messageList = document.getElementsByClassName("messages")
+
+    // Init websocket connection
+    conn = new WebSocket("ws://localhost:3000/ws")
+
+    conn.onmessage = function (event) {
+      var message = event.data.split('\n')
+      console.log(message)
+    }
+  }
+
+  document.getElementById("form").onsubmit = function () {
+    if (!conn) {
+      alert('Connection fail')
+    }
+
+    if (!message) {
+      alert('Message empty')
+    }
+
+    conn.send(message.value)
+    message.value = ''
+  }
+</script>
